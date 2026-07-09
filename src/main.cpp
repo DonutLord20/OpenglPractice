@@ -2,6 +2,7 @@
 #include <GLFW/glfw3.h>
 #include <iostream>
 #include <cmath>
+#include "Shaders.hpp"
 
 int main()
 {
@@ -58,21 +59,12 @@ int main()
       5,1,4
    };
 
-   GLuint VertexShader = glCreateShader(GL_VERTEX_SHADER);
-   GLuint FragmentShader = glCreateShader(GL_FRAGMENT_SHADER);
-   GLuint ShaderProgram = glCreateProgram();
-
-   glShaderSource(VertexShader,1,&VertexShaderSource,nullptr);
-   glCompileShader(VertexShader);
-   glAttachShader(ShaderProgram,VertexShader);
-
-   glShaderSource(FragmentShader,1,&FragmentShaderSource,nullptr);
-   glCompileShader(FragmentShader);
-   glAttachShader(ShaderProgram,FragmentShader);
-   
+   GLint ShaderProgram = glCreateProgram();
+   Shader* VertexShader = new Shader(VertexShaderSource,ShaderProgram,GL_VERTEX_SHADER);
+   Shader* FragmentShader = new Shader(FragmentShaderSource,ShaderProgram,GL_FRAGMENT_SHADER);
    glLinkProgram(ShaderProgram);
-   glDeleteShader(VertexShader);
-   glDeleteShader(FragmentShader);
+   VertexShader->Delete();
+   FragmentShader->Delete();
 
    GLuint VBO,VAO,EBO;
 
@@ -99,6 +91,8 @@ int main()
       glfwSwapBuffers(window);
    }
    
+   delete VertexShader;
+   delete FragmentShader;
    glDeleteProgram(ShaderProgram);
    glDeleteBuffers(1,&VBO);
    glDeleteBuffers(1,&EBO);
