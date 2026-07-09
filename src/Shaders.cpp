@@ -6,7 +6,7 @@
 
 Shader::Shader(const char* ShaderSource,GLint ShaderProgram,int Type)
 {
-    ShaderSource = ShaderSource;
+    _ShaderSource = ShaderSource;
     _ShaderProgram = ShaderProgram;
     _Type = Type;
     _Shader = glCreateShader(Type);

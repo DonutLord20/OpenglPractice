@@ -62,6 +62,8 @@ int main()
    GLint ShaderProgram = glCreateProgram();
    Shader* VertexShader = new Shader(VertexShaderSource,ShaderProgram,GL_VERTEX_SHADER);
    Shader* FragmentShader = new Shader(FragmentShaderSource,ShaderProgram,GL_FRAGMENT_SHADER);
+   VertexShader->Activate();
+   FragmentShader->Activate();
    glLinkProgram(ShaderProgram);
    VertexShader->Delete();
    FragmentShader->Delete();
