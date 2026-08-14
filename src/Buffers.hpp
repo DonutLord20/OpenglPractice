@@ -5,7 +5,7 @@
 #include <GLFW/glfw3.h>
 #include <iostream>
 #include <cmath>
-
+#include <vector>
 
 class VertexArrayObject
 {
@@ -29,6 +29,7 @@ class BufferObject
         void PassData(GLfloat* Data,size_t Size,int Mode);
         void PassData(GLuint* Data,size_t Size,int Mode);
         void PassData(GLboolean* Data,size_t Size,int Mode);
+        void PassData(std::vector <GLfloat>* Data,size_t Size,int Mode);
         void Delete();
     
     private:

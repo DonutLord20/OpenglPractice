@@ -42,13 +42,13 @@ void Camera::Update(float DeltaTime)
     {
         _Position -= _MoveSpeed * DeltaTime * _Direction;
     }
-    if (glfwGetKey(_Window,GLFW_KEY_A))
+    if (glfwGetKey(_Window,GLFW_KEY_A) == GLFW_PRESS)
     {
-        _Position += _MoveSpeed * DeltaTime * glm::normalize(glm::cross(_Position,_Up));
+        _Position -= _MoveSpeed * DeltaTime * glm::normalize(glm::cross(_Direction,_Up));
     }
-    if (glfwGetKey(_Window,GLFW_KEY_D))
+    if (glfwGetKey(_Window,GLFW_KEY_D) == GLFW_PRESS)
     {
-        _Position -= _MoveSpeed * DeltaTime * glm::normalize(glm::cross(_Position,_Up));
+        _Position += _MoveSpeed * DeltaTime * glm::normalize(glm::cross(_Direction,_Up));
     }
 
     if (_Position.y > 0 || _Position.y < 0)
@@ -66,7 +66,7 @@ void Camera::Update(float DeltaTime)
     _Direction.y = sin(glm::radians(_Pitch));
     _Direction.z = sin(glm::radians(_Yaw)) * cos(glm::radians(_Pitch));
 
-    glm::normalize(_Direction);
+    _Direction = glm::normalize(_Direction);
 
     _ViewMat = glm::lookAt(_Position,_Position + _Direction,_Up);
 

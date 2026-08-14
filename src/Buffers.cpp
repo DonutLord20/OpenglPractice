@@ -3,6 +3,7 @@
 #include <iostream>
 #include <cmath>
 #include "Buffers.hpp"
+#include<vector>
 
 VertexArrayObject::VertexArrayObject()
 {
@@ -54,6 +55,11 @@ void BufferObject::PassData(GLuint* Data,size_t Size,int Usage)
 }
 
 void BufferObject::PassData(GLboolean* Data,size_t Size,int Usage)
+{
+    glBufferData(_Type,Size,Data,Usage);
+}
+
+void BufferObject::PassData(std::vector<GLfloat>* Data,size_t Size,int Usage)
 {
     glBufferData(_Type,Size,Data,Usage);
 }
