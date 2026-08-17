@@ -13,7 +13,7 @@
 #include <glm/gtc/type_ptr.hpp>
 #include "Camera.hpp"
 
-Camera::Camera(glm::vec3 Position,glm::vec3 direction,glm::vec3 Up,GLint ShaderProgram,float MoveSpeed,float RotateSpeed,GLFWwindow* Window)
+Camera::Camera(glm::vec3 Position,glm::vec3 direction,glm::vec3 Up,GLint ShaderProgram,float MoveSpeed,float RotateSpeed,float FOV,GLFWwindow* Window)
 {
     _Position = Position;
     _Direction = direction;
@@ -24,8 +24,17 @@ Camera::Camera(glm::vec3 Position,glm::vec3 direction,glm::vec3 Up,GLint ShaderP
     _Window = Window;
     _Yaw = 90.0f;
     _Pitch = 0.0f;
+    _FOV = FOV;
     glfwGetCursorPos(_Window,&_LastCursorX,&_LastCursorY);
     
+    int Width = 0;
+    int Height = 0;
+    glfwGetWindowSize(_Window,&Width,&Height);
+    _ProjMat = glm::mat4(1.0f);
+    _ProjMat = glm::perspective(glm::radians(_FOV),static_cast<float>(Width) / static_cast<float>(Height),1.0f,100.0f);
+    glUseProgram(_ShaderProgram);
+    GLint ProjectionLoc = glGetUniformLocation(_ShaderProgram,"projection");
+    glUniformMatrix4fv(ProjectionLoc,1,GL_FALSE,glm::value_ptr(_ProjMat));
 }
 
 void Camera::Update(float DeltaTime)
@@ -70,6 +79,11 @@ void Camera::Update(float DeltaTime)
 
     _ViewMat = glm::lookAt(_Position,_Position + _Direction,_Up);
 
+    glUseProgram(_ShaderProgram);
     GLint Viewloc = glGetUniformLocation(_ShaderProgram,"view");
     glUniformMatrix4fv(Viewloc,1,GL_FALSE,glm::value_ptr(_ViewMat));
+
+    glUseProgram(0);
+
+    
 }

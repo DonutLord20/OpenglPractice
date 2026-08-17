@@ -17,6 +17,9 @@
 #include "Camera.hpp"
 #include "stb/stb_image.h"
 
+
+
+
 class Texture
 {
     public:
@@ -34,7 +37,7 @@ class Texture
 class Mesh
 {
     public:
-        Mesh(GLfloat Vertices[],glm::vec3 Position);
+        Mesh(GLfloat Vertices[],int Count,glm::vec3 Position);
         virtual void Load(GLuint ShaderProgram);
         virtual void UnLoad();
         virtual void Draw(GLuint ShaderProgram);
@@ -43,8 +46,25 @@ class Mesh
         glm::vec3 _Position;
         VertexArrayObject* _VAO;
         BufferObject* _VBO;
+        int _Count;
+        GLint _ModelLoc;
 
 };
+
+class Actor
+{
+    public:
+        Actor();
+        virtual void Update(float DelatTime);
+        virtual Mesh* GetMesh() {return nullptr;};
+        virtual Camera* GetCamera() {return nullptr;};
+        virtual void Load();
+        virtual void UnLoad();
+        virtual void Draw();
+    protected:
+        
+};
+
 
 
 #endif

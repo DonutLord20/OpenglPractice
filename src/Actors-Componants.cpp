@@ -15,6 +15,23 @@
 #include "Camera.hpp"
 #include "stb/stb_image.h"
 #include "Actors-Componants.hpp"
+#include "Game.hpp"
+
+
+Actor::Actor()
+{
+    
+}
+
+void Actor::Update(float DeltaTime) {};
+
+void Actor::Load() {};
+
+void Actor::UnLoad() {};
+
+void Actor::Draw() {};
+
+
 
 Texture::Texture(const char* FileName)
 {
@@ -73,12 +90,15 @@ void Texture::Activate(int Unit,GLint SamplerLoc)
 }
 
 
-Mesh::Mesh(GLfloat Vertices[],glm::vec3 Position)
+Mesh::Mesh(GLfloat Vertices[],int Count,glm::vec3 Position)
 {
     _Vertices = Vertices;
     _Position = Position;
     _VAO = nullptr;
     _VBO = nullptr;
+    _Count = Count;
+
+    
    
 }
 
@@ -89,17 +109,39 @@ void Mesh::Load(GLuint ShaderProgram)
   
 
     _VAO->Bind();
+    _VBO->Bind();
     _VAO->CreateAttribePointer(0,3,GL_FLOAT,GL_FALSE,sizeof(GLfloat) * 6,(void*)(0));
     _VAO->CreateAttribePointer(1,3,GL_FLOAT,GL_FALSE,sizeof(GLfloat) * 6,(void*)(sizeof(GLfloat) * 3));
 
-    _VBO->Bind();
-    _VBO->PassData(_Vertices,sizeof(_Vertices),GL_STATIC_DRAW);
+    _VBO->PassData(_Vertices,_Count * sizeof(GLfloat),GL_STATIC_DRAW);
 
     _VAO->UnBind();
 
+    glUseProgram(ShaderProgram);
     glm::mat4 Transform = glm::mat4(1.0f);
     Transform = glm::translate(Transform,_Position);
-    GLint TransformLoc = glGetUniformLocation(ShaderProgram,"Transform");
-    glUniformMatrix4fv(TransformLoc,sizeof(Transform),GL_FALSE,glm::value_ptr(Transform));
+    _ModelLoc = glGetUniformLocation(ShaderProgram,"model");
+    glUniformMatrix4fv(_ModelLoc,1,GL_FALSE,glm::value_ptr(Transform));
+
+    glUseProgram(0);
 }
 
+void Mesh::Draw(GLuint ShaderProgram)
+{
+    glUseProgram(ShaderProgram);
+
+    _VAO->Bind();
+    glDrawArrays(GL_TRIANGLES,0,_Count / 6);
+    _VAO->UnBind();
+
+    glUseProgram(0);
+}
+
+void Mesh::UnLoad()
+{
+   _VAO->Delete();
+   _VBO->Delete();
+
+   delete _VAO;
+   delete _VBO;
+}

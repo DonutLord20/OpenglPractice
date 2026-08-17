@@ -17,6 +17,7 @@ Game::Game()
 {
     _Window = nullptr;
     _LastTime = glfwGetTime();
+    _ShaderProgram = 0;
 }
 
 bool Game::Initialize(int WindowWidth,int WindowHeight,const char* WindowTitle)
@@ -42,6 +43,38 @@ bool Game::Initialize(int WindowWidth,int WindowHeight,const char* WindowTitle)
 
     glfwMakeContextCurrent(_Window);
     gladLoadGL();
+    glEnable(GL_DEPTH_TEST);
+    glfwSetInputMode(_Window,GLFW_CURSOR,GLFW_CURSOR_DISABLED);
+
+    const char* VertexShaderSource = "#version 330 core\n"
+   "layout (location = 0) in vec3 aPos;\n"
+   "layout (location = 1) in vec3 aColour;\n"
+    "out vec3 Colour;\n"
+   "uniform mat4 model;\n"
+   "uniform mat4 view;\n"
+   "uniform mat4 projection;\n"
+   "void main()\n"
+   "{\n"
+   "gl_Position = projection * view * model * vec4(aPos,1.0);\n"
+    "Colour = aColour;\n"
+   "}\0";
+
+   const char* FragmentShaderSource = "#version 330 core\n"
+   "out vec4 FragColor;\n"
+   "in vec3 Colour;\n"
+   "void main()\n"
+   "{\n"
+   "FragColor = vec4(Colour,1.0);\n"
+   "}\0";
+
+   _ShaderProgram = glCreateProgram();
+   Shader VertexShader = Shader(VertexShaderSource,_ShaderProgram,GL_VERTEX_SHADER);
+   Shader FragmentShader = Shader(FragmentShaderSource,_ShaderProgram,GL_FRAGMENT_SHADER);
+
+   VertexShader.Activate();
+   FragmentShader.Activate();
+   glLinkProgram(_ShaderProgram);
+    
     return true;
 }
 

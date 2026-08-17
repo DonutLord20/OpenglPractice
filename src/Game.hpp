@@ -29,6 +29,7 @@ class Game
         virtual void  QuitGame();
         GLFWwindow* _Window;
         float _LastTime;
+        GLuint _ShaderProgram;
         
 
 };
