@@ -15,21 +15,8 @@
 #include "Camera.hpp"
 #include "stb/stb_image.h"
 #include "Actors-Componants.hpp"
-#include "Game.hpp"
 
 
-Actor::Actor()
-{
-    
-}
-
-void Actor::Update(float DeltaTime) {};
-
-void Actor::Load() {};
-
-void Actor::UnLoad() {};
-
-void Actor::Draw() {};
 
 
 
@@ -129,6 +116,9 @@ void Mesh::Load(GLuint ShaderProgram)
 void Mesh::Draw(GLuint ShaderProgram)
 {
     glUseProgram(ShaderProgram);
+    glm::mat4 Transform = glm::mat4(1.0f);
+    Transform = glm::translate(Transform,_Position);
+    glUniformMatrix4fv(_ModelLoc,1,GL_FALSE,glm::value_ptr(Transform));
 
     _VAO->Bind();
     glDrawArrays(GL_TRIANGLES,0,_Count / 6);

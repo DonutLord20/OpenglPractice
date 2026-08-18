@@ -5,6 +5,7 @@
 #include "Game.hpp"
 #include "Camera.hpp"
 #include "Actors-Componants.hpp"
+#include "TestingMyClasses.hpp"
 
 class TestGame : Game
 {
@@ -15,29 +16,33 @@ class TestGame : Game
         {
             bool Success = Game::Initialize(WindowWidth,WindowHeight,WindowTitle);
             
-            _Camera = new Camera(glm::vec3(0.0f,0.0f,0.0f),glm::vec3(0.0f,0.0f,1.0f),glm::vec3(0.0f,1.0f,0.0f),_ShaderProgram,10.0f,45.0f,45.0f,_Window);
+            GLfloat Vertices[] =
+            {
+                0.0f,  0.5f,  0.0f,    0.0f,1.0f,0.0f,      
+                -0.5f, -0.5f, -0.5f,   0.0f,1.0f,0.0f,   
+                0.5f, -0.5f, -0.5f,    0.0f,1.0f,0.0f,   
 
-            GLfloat _PyramidVertices[] = {
-                -0.5f,-0.5f,-0.5f,   0.2f,0.3f,0.4f,
-                0.5f,-0.5f,-0.5f,    0.2f,0.3f,0.4f,
-                0.0f,0.5f,0.0f,      0.2f,0.3f,0.4f,
+    
+                0.0f,  0.5f,  0.0f,      0.0f,1.0f,0.0f,    
+                -0.5f, -0.5f,  0.5f,     0.0f,1.0f,0.0f, 
+                -0.5f, -0.5f, -0.5f,     0.0f,1.0f,0.0f, 
 
-                -0.5f,-0.5f,0.5f,    0.2f,0.3f,0.4f,
-                -0.5f,-0.5f,-0.5f,   0.2f,0.3f,0.4f,
-                0.0f,0.5f,0.0f,     0.2f,0.3f,0.4f,
+    
+                0.0f,  0.5f,  0.0f,      0.0f,1.0f,0.0f, 
+                0.5f, -0.5f, -0.5f,      0.0f,1.0f,0.0f, 
+                0.5f, -0.5f,  0.5f,      0.0f,1.0f,0.0f, 
 
-                -0.5f,-0.5f,0.5f,    0.2f,0.3f,0.4f,
-                0.5f,-0.5f,0.5f,     0.2f,0.3f,0.4f,
-                0.0f,0.5f,0.0f,      0.2f,0.3f,0.4f,
-
-                0.5f,-0.5f,0.5f,     0.2f,0.3f,0.4f,
-                0.5f,-0.5f,-0.5f,    0.2f,0.3f,0.4f,
-                0.0f,0.5f,0.0f,      0.2f,0.3f,0.4f
-
+    
+                0.0f,  0.5f,  0.0f,      0.0f,1.0f,0.0f, 
+                0.5f, -0.5f,  0.5f,      0.0f,1.0f,0.0f, 
+                -0.5f, -0.5f,  0.5f,     0.0f,1.0f,0.0f, 
             };
-
-            _Pyramid = new Mesh(_PyramidVertices,sizeof(_PyramidVertices) / sizeof(GLfloat),glm::vec3(0.0f,0.0f,3.0f));
+            _Pyramid = new Mesh(Vertices,sizeof(Vertices) / sizeof(GLfloat),glm::vec3(0.0f,0.0f,3.0f));
             _Pyramid->Load(_ShaderProgram);
+            _Pyramid2 = new Mesh(Vertices,sizeof(Vertices) / sizeof(GLfloat),glm::vec3(5.0f,0.0f,-6.0f));
+            _Pyramid2->Load(_ShaderProgram);
+            _Player = new Camera(glm::vec3(0.0f,0.0f,0.0f),glm::vec3(0.0f,0.0f,1.0f),glm::vec3(0.0f,1.0f,0.0f),_ShaderProgram,10.0f,45.0f,45.0f,_Window);
+            
             
             return Success;
         }
@@ -48,27 +53,29 @@ class TestGame : Game
         }
 
     protected :
-        Camera* _Camera;
-        Mesh* _Pyramid;
+       Mesh* _Pyramid;
+       Mesh* _Pyramid2;
+       Camera* _Player;
     
         void Update(float DeltaTime) override
         {
-            _Camera->Update(DeltaTime);
+          _Player->Update(DeltaTime);
         }
 
         void Draw() override
         {
-            _Pyramid->Draw(_ShaderProgram);
+           _Pyramid->Draw(_ShaderProgram);
+           _Pyramid2->Draw(_ShaderProgram);
         }
 
         void QuitGame() override
         {
            
-            _Pyramid->UnLoad();
-            
-            delete _Pyramid;
-            delete _Camera;
+           _Pyramid->UnLoad();
 
+           delete _Pyramid;
+           delete _Player;
+           
             Game::QuitGame();
         }
    

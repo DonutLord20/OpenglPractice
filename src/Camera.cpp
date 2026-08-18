@@ -35,6 +35,12 @@ Camera::Camera(glm::vec3 Position,glm::vec3 direction,glm::vec3 Up,GLint ShaderP
     glUseProgram(_ShaderProgram);
     GLint ProjectionLoc = glGetUniformLocation(_ShaderProgram,"projection");
     glUniformMatrix4fv(ProjectionLoc,1,GL_FALSE,glm::value_ptr(_ProjMat));
+
+
+
+    glUseProgram(0);
+
+
 }
 
 void Camera::Update(float DeltaTime)

@@ -11,6 +11,7 @@
 #include <glm/ext/matrix_clip_space.hpp> 
 #include <glm/ext/scalar_constants.hpp> 
 #include <glm/gtc/type_ptr.hpp>
+#include "Actors-Componants.hpp"
 #include "Game.hpp"
 
 Game::Game()
@@ -18,6 +19,7 @@ Game::Game()
     _Window = nullptr;
     _LastTime = glfwGetTime();
     _ShaderProgram = 0;
+    _Actors = std::vector<Actor*>();
 }
 
 bool Game::Initialize(int WindowWidth,int WindowHeight,const char* WindowTitle)
@@ -109,6 +111,27 @@ void Game::Draw()
 
 void Game::QuitGame()
 {
+    for (int i = 0; i < _Actors.size(); i++)
+    {
+        delete _Actors[i];
+    }
     glfwDestroyWindow(_Window);
     glfwTerminate();
 }
+
+
+
+
+
+Actor::Actor(Game* Owner)
+{
+    _Owner = Owner;
+}
+
+void Actor::Update(float DeltaTime) {};
+
+void Actor::Load() {};
+
+void Actor::UnLoad() {};
+
+void Actor::Draw() {};

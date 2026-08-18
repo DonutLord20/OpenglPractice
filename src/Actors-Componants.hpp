@@ -51,19 +51,7 @@ class Mesh
 
 };
 
-class Actor
-{
-    public:
-        Actor();
-        virtual void Update(float DelatTime);
-        virtual Mesh* GetMesh() {return nullptr;};
-        virtual Camera* GetCamera() {return nullptr;};
-        virtual void Load();
-        virtual void UnLoad();
-        virtual void Draw();
-    protected:
-        
-};
+
 
 
 
