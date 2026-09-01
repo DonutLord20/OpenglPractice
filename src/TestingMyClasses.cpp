@@ -10,18 +10,12 @@
 Pyramid::Pyramid(Game* Owner,glm::vec3 Position,GLuint ShaderProgram) : Actor(Owner)
 {
 
-    GLfloat _PyramidVertices[] = {
-        
-       -0.5f,-0.5f,-5.0f, 1.0f,1.0f,1.0f,
-        0.5f,-0.5f,-5.0f, 0.0f,0.0f,0.0f,
-        0.0f,0.5f,0.0f, 0.0f,0.0f,0.0f,
+    
 
-    };
-
-    _Mesh = new Mesh(_PyramidVertices,sizeof(_PyramidVertices) / sizeof(GLfloat),Position);
+    _Mesh = new Mesh(_Vertices,sizeof(_Vertices) / sizeof(GLfloat),Position);
     _ShaderProgram = ShaderProgram;
 
-
+    
     
 }
 

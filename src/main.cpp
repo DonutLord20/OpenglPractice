@@ -15,34 +15,10 @@ class TestGame : Game
         bool Initialize(int WindowWidth,int WindowHeight,const char* WindowTitle) override
         {
             bool Success = Game::Initialize(WindowWidth,WindowHeight,WindowTitle);
+            _Player = new User(this,glm::vec3(0.0f,0.0f,0.0f),_ShaderProgram,_Window);
+            _Pyramid = new Pyramid(this,glm::vec3(0.0f,0.0f,3.0f),_ShaderProgram);
             
-            GLfloat Vertices[] =
-            {
-                0.0f,  0.5f,  0.0f,    0.0f,1.0f,0.0f,      
-                -0.5f, -0.5f, -0.5f,   0.0f,1.0f,0.0f,   
-                0.5f, -0.5f, -0.5f,    0.0f,1.0f,0.0f,   
-
-    
-                0.0f,  0.5f,  0.0f,      0.0f,1.0f,0.0f,    
-                -0.5f, -0.5f,  0.5f,     0.0f,1.0f,0.0f, 
-                -0.5f, -0.5f, -0.5f,     0.0f,1.0f,0.0f, 
-
-    
-                0.0f,  0.5f,  0.0f,      0.0f,1.0f,0.0f, 
-                0.5f, -0.5f, -0.5f,      0.0f,1.0f,0.0f, 
-                0.5f, -0.5f,  0.5f,      0.0f,1.0f,0.0f, 
-
-    
-                0.0f,  0.5f,  0.0f,      0.0f,1.0f,0.0f, 
-                0.5f, -0.5f,  0.5f,      0.0f,1.0f,0.0f, 
-                -0.5f, -0.5f,  0.5f,     0.0f,1.0f,0.0f, 
-            };
-            _Pyramid = new Mesh(Vertices,sizeof(Vertices) / sizeof(GLfloat),glm::vec3(0.0f,0.0f,3.0f));
-            _Pyramid->Load(_ShaderProgram);
-            _Pyramid2 = new Mesh(Vertices,sizeof(Vertices) / sizeof(GLfloat),glm::vec3(5.0f,0.0f,-6.0f));
-            _Pyramid2->Load(_ShaderProgram);
-            _Player = new Camera(glm::vec3(0.0f,0.0f,0.0f),glm::vec3(0.0f,0.0f,1.0f),glm::vec3(0.0f,1.0f,0.0f),_ShaderProgram,10.0f,45.0f,45.0f,_Window);
-            
+            _Pyramid->Load();
             
             return Success;
         }
@@ -53,9 +29,8 @@ class TestGame : Game
         }
 
     protected :
-       Mesh* _Pyramid;
-       Mesh* _Pyramid2;
-       Camera* _Player;
+       User* _Player;
+       Pyramid* _Pyramid;
     
         void Update(float DeltaTime) override
         {
@@ -64,14 +39,13 @@ class TestGame : Game
 
         void Draw() override
         {
-           _Pyramid->Draw(_ShaderProgram);
-           _Pyramid2->Draw(_ShaderProgram);
+           _Pyramid->Draw();
         }
 
         void QuitGame() override
         {
            
-           _Pyramid->UnLoad();
+         
 
            delete _Pyramid;
            delete _Player;
