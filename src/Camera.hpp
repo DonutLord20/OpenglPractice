@@ -18,9 +18,11 @@
 class Camera
 {
     public:
-        Camera(glm::vec3 Position,glm::vec3 Direction,glm::vec3 Up,GLint ShaderProgram,float _MoveSpeed,float _RotateSpeed,float FOV,GLFWwindow* Window);
+        Camera(glm::vec3 Position,float StartYaw,float StartPitch,glm::vec3 Up,GLint ShaderProgram,float MoveSpeed,float RotateSpeed,float FOV,GLFWwindow* Window);
         void Update(float DeltaTime);
-    
+        glm::vec3 GetPosition() {return _Position;};
+        glm::vec3 GetDirection() {return _Direction;}
+        void SetMoveSpeed(float Speed) {_MoveSpeed = Speed;};
     private:
         glm::vec3 _Position;
         glm::vec3 _Direction;

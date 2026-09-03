@@ -81,10 +81,11 @@ Mesh::Mesh(GLfloat Vertices[],int Count,glm::vec3 Position)
 {
     _Vertices = Vertices;
     _Position = Position;
+    _Rotation = glm::vec3(0.0f);
     _VAO = nullptr;
     _VBO = nullptr;
     _Count = Count;
-
+    _ModelMat = glm::mat4(1.0f);
     
    
 }
@@ -105,27 +106,36 @@ void Mesh::Load(GLuint ShaderProgram)
     _VAO->UnBind();
 
     glUseProgram(ShaderProgram);
-    glm::mat4 Transform = glm::mat4(1.0f);
-    Transform = glm::translate(Transform,_Position);
+    _ModelMat = glm::translate(_ModelMat,_Position);
     _ModelLoc = glGetUniformLocation(ShaderProgram,"model");
-    glUniformMatrix4fv(_ModelLoc,1,GL_FALSE,glm::value_ptr(Transform));
+    glUniformMatrix4fv(_ModelLoc,1,GL_FALSE,glm::value_ptr(_ModelMat));
 
     glUseProgram(0);
 }
 
+
+
 void Mesh::Draw(GLuint ShaderProgram)
 {
+    _ModelMat = glm::mat4(1.0f);
+    _ModelMat = glm::translate(_ModelMat,_Position);
+
+    _ModelMat = glm::rotate(_ModelMat,glm::radians(_Rotation.x),glm::vec3(1.0f,0.0f,0.0f));
+    _ModelMat = glm::rotate(_ModelMat,glm::radians(_Rotation.y),glm::vec3(0.0f,1.0f,0.0f));
+    _ModelMat = glm::rotate(_ModelMat,glm::radians(_Rotation.z),glm::vec3(0.0f,0.0f,1.0f));
+
+
+
     glUseProgram(ShaderProgram);
-    glm::mat4 Transform = glm::mat4(1.0f);
-    Transform = glm::translate(Transform,_Position);
-    glUniformMatrix4fv(_ModelLoc,1,GL_FALSE,glm::value_ptr(Transform));
+    glUniformMatrix4fv(_ModelLoc,1,GL_FALSE,glm::value_ptr(_ModelMat));
 
     _VAO->Bind();
     glDrawArrays(GL_TRIANGLES,0,_Count / 6);
     _VAO->UnBind();
-
     glUseProgram(0);
 }
+
+
 
 void Mesh::UnLoad()
 {

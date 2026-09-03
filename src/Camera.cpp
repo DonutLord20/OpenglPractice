@@ -13,17 +13,17 @@
 #include <glm/gtc/type_ptr.hpp>
 #include "Camera.hpp"
 
-Camera::Camera(glm::vec3 Position,glm::vec3 direction,glm::vec3 Up,GLint ShaderProgram,float MoveSpeed,float RotateSpeed,float FOV,GLFWwindow* Window)
+Camera::Camera(glm::vec3 Position,float StartYaw,float StartPitch,glm::vec3 Up,GLint ShaderProgram,float MoveSpeed,float RotateSpeed,float FOV,GLFWwindow* Window)
 {
     _Position = Position;
-    _Direction = direction;
+    _Direction = glm::vec3(0.0f);
     _Up = Up;
     _ShaderProgram = ShaderProgram;
     _MoveSpeed = MoveSpeed;
     _RotateSpeed = RotateSpeed;
     _Window = Window;
-    _Yaw = 90.0f;
-    _Pitch = 0.0f;
+    _Yaw = StartYaw;
+    _Pitch = StartPitch;
     _FOV = FOV;
     glfwGetCursorPos(_Window,&_LastCursorX,&_LastCursorY);
     

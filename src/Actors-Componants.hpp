@@ -41,15 +41,25 @@ class Mesh
         virtual void Load(GLuint ShaderProgram);
         virtual void UnLoad();
         virtual void Draw(GLuint ShaderProgram);
+        glm::vec3 GetPosition() {return _Position;};
+        glm::vec3 GetRotation() {return _Rotation;};
+        void IncPosition(glm::vec3 Translation) {_Position += Translation;};
+        void IncRotation(glm::vec3 Translation) {_Rotation += Translation;};
+    
     protected:
         GLfloat* _Vertices;
         glm::vec3 _Position;
+        glm::vec3 _Rotation;
+        glm::mat4 _ModelMat;
         VertexArrayObject* _VAO;
         BufferObject* _VBO;
         int _Count;
         GLint _ModelLoc;
 
 };
+
+
+
 
 
 

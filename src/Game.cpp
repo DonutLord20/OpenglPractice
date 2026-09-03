@@ -135,3 +135,54 @@ void Actor::Load() {};
 void Actor::UnLoad() {};
 
 void Actor::Draw() {};
+
+
+PhysicsComponant::PhysicsComponant(Actor* Owner,float Mass,float CollisionRadius,glm::vec3 StartVelocity)
+{
+    _Owner = Owner;
+    _Mass = Mass;
+    _CollisionRadius = CollisionRadius;
+    _StartTime = glfwGetTime();
+    _Velocity = StartVelocity;
+    _Momentum = _Mass * _Velocity;
+}
+
+
+
+
+void PhysicsComponant::CalculateResultantForce()
+{
+   Force Temp;
+   Temp.Componants = glm::vec3(0.0f);
+   for (int i = 0; i < _ActingForces.size(); i++)
+   {
+        Temp.Componants += _ActingForces[i].Componants;
+   }
+
+   _ResultantForce = Temp;
+}
+
+void PhysicsComponant::Update(std::vector<Actor*> ToCheckForCollsions,float DelatTime)
+{
+   for (int i = 0; i < ToCheckForCollsions.size(); i++)
+   {
+        if (ToCheckForCollsions[i] != _Owner)
+        {
+          if (ToCheckForCollsions[i]->GetPosition().z <= _Owner->GetPosition().z + _CollisionRadius && ToCheckForCollsions[i]->GetPosition().z >= _Owner->GetPosition().z - _CollisionRadius 
+        && ToCheckForCollsions[i]->GetPosition().x >= _Owner->GetPosition().x - _CollisionRadius && ToCheckForCollsions[i]->GetPosition().x <= _Owner->GetPosition().x + _CollisionRadius)
+          {
+            PhysicsComponant* Temp = ToCheckForCollsions[i]->GetPhysicsComponant();
+            glm::vec3 MomentumAfter = _Momentum + Temp->GetMomentum();
+            glm::vec3 VelocityAfter = MomentumAfter / (_Mass + Temp->GetMass());
+            _Velocity = VelocityAfter;
+            Temp->SetVelocity(VelocityAfter);
+          }
+        }
+   }
+
+   CalculateResultantForce();
+   _ActingForces.clear();
+   _Acceleration = _ResultantForce.Componants / _Mass;
+   _Velocity += _Acceleration * DelatTime;
+   _Momentum = _Velocity * _Mass;
+}

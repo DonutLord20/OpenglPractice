@@ -20,7 +20,8 @@
 
 class Game;
 class Actor;
-
+class PhysicsComponant;
+struct Force;
 class Game
 {
     public:
@@ -48,11 +49,45 @@ class Actor
         virtual void Update(float DelatTime);
         virtual Mesh* GetMesh() {return nullptr;};
         virtual Camera* GetCamera() {return nullptr;};
+        virtual PhysicsComponant* GetPhysicsComponant() {return nullptr;};
+        virtual glm::vec3 GetPosition() {return glm::vec3(0.0f);};
+        virtual glm::vec3 GetDirection() {return glm::vec3(0.0f);};
         virtual void Load();
         virtual void UnLoad();
         virtual void Draw();
     protected:
         Game* _Owner;
+};
+
+
+struct Force
+{
+    glm::vec3 Componants = glm::vec3(0.0f);
+};
+
+class PhysicsComponant
+{
+    public:
+        PhysicsComponant(Actor* Owner,float Mass,float CollisionRadius,glm::vec3 StartVelocity);
+        void Update(std::vector<Actor*> ToCheckForCollsions,float DelatTime);
+        void SetVelocity(glm::vec3 Velocity) {_Velocity = Velocity;};
+        Force GetResultantForce() {return _ResultantForce;}
+        void AddActingForce(Force force) {_ActingForces.push_back(force);};
+        glm::vec3 GetVelocity() {return _Velocity;};
+        glm::vec3 GetAcceleration() {return _Acceleration;};
+        float GetMass() {return _Mass;};
+        glm::vec3 GetMomentum() {return _Momentum;};
+    private:
+        void CalculateResultantForce();
+        Actor* _Owner;
+        float _Mass;
+        float _CollisionRadius;
+        glm::vec3 _Momentum;
+        glm::vec3 _Acceleration;
+        glm::vec3 _Velocity;
+        std::vector<Force> _ActingForces; 
+        Force _ResultantForce;
+        float _StartTime;
 };
 
 #endif 
