@@ -2,10 +2,10 @@
 #include <GLFW/glfw3.h>
 #include <iostream>
 #include <cmath>
-#include "Game.hpp"
-#include "Camera.hpp"
-#include "Actors-Componants.hpp"
-#include "TestingMyClasses.hpp"
+#include "GraphicsLibs/Game.hpp"
+#include "GraphicsLibs/Camera.hpp"
+#include "GraphicsLibs/Actors-Componants.hpp"
+#include "Maze.hpp"
 
 class TestGame : Game
 {
@@ -15,15 +15,32 @@ class TestGame : Game
         bool Initialize(int WindowWidth,int WindowHeight,const char* WindowTitle) override
         {
             bool Success = Game::Initialize(WindowWidth,WindowHeight,WindowTitle);
-            _Player = new User(this,glm::vec3(0.0f,0.0f,0.0f),_ShaderProgram,_Window);
-            _Pyramid = new Pyramid(this,glm::vec3(0.0f,0.0f,-3.0f),_ShaderProgram);
-            _Pyramid2 = new Pyramid(this,glm::vec3(0.0f,0.0f,6.0f),_ShaderProgram);
+            _Graph = new Graph();
+            _Camera = new Camera(glm::vec3(0.0f,0.0f,0.0f),-90.0f,0.0f,glm::vec3(0.0f,1.0f,0.0f),_ShaderProgram,10.0f,35.0f,45.0f,_Window);
 
-            _Pyramid2->Load();
-            _Pyramid->Load();
+            glm::vec3 Pos = glm::vec3(0.0f,0.0f,0.0f);
+
+            for (int i = 0; i < 100; i++)
+            {
+                if (i % 10 == 0)
+                {
+                    Pos.x = 0.0f;
+                    Pos.y += 1.0f;
+                }
+                else
+                {
+                    Pos.x += 1.0f;
+                }
+
+                _Graph->AddNode(new GraphNode(Pos));
+            }
+
+            for (int j = 0; j < _Graph->GetSize(); j++)
+            {
+                GraphNode* Temp = _Graph->GetGraphNode(j);
+                _Actors.push_back((Actor*)new Wall(this,Temp->GetPosition(),glm::vec3(0.0f,0.0f,0.0f),0.5f,0.5f,glm::vec3(0.0f,1.0f,0.0f),_ShaderProgram));
+            }
             
-            _Actors.push_back((Actor*)_Player);
-            _Actors.push_back((Actor*)_Pyramid);
             return Success;
         }
 
@@ -33,30 +50,26 @@ class TestGame : Game
         }
 
     protected :
-       User* _Player;
-       Pyramid* _Pyramid;
-       Pyramid* _Pyramid2;
+        Graph* _Graph;
+        Camera* _Camera;
     
         void Update(float DeltaTime) override
         {
-          _Player->Update(DeltaTime);
-          _Pyramid->Update(DeltaTime);
-          _Pyramid2->Update(DeltaTime);
+            _Camera->Update(DeltaTime);
         }
 
         void Draw() override
         {
-           _Pyramid->Draw();
-           _Pyramid2->Draw();
+           for (int i = 0; i < _Actors.size(); i++)
+           {
+                _Actors[i]->Draw();
+           }
         }
 
         void QuitGame() override
         {
-           
-         
-
-           delete _Pyramid;
-           delete _Player;
+           delete _Camera;
+           delete _Graph;
            
             Game::QuitGame();
         }
