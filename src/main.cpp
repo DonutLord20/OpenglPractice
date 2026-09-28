@@ -25,7 +25,7 @@ class TestGame : Game
                 if (i % 10 == 0)
                 {
                     Pos.x = 0.0f;
-                    Pos.y += 1.0f;
+                    Pos.z -= 1.0f;
                 }
                 else
                 {

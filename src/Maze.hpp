@@ -51,12 +51,18 @@ class Graph
 {
     public:
         Graph();
-        void AddNode(GraphNode* Node) {_Nodes.push_back(Node);};
+        void AddNode(GraphNode* Node) {_Nodes.push_back(Node); _NodeMap[Node->GetPosition()] = Node;};
         int GetSize() {return _Nodes.size();};
-        GraphNode* GetGraphNode(int Index) {return _Nodes[Index];};
+        GraphNode* IndexGraphNode(int Index) {return _Nodes[Index];};
+        GraphNode* HashGraphNode(glm::vec3 Coord) {return _NodeMap[Coord];};
     private:
         std::vector<GraphNode*> _Nodes;
-        
+        std::map<glm::vec3,GraphNode*> _NodeMap;
 };
+
+namespace MazeGen
+{
+    void Wilsons(Game* Owner,Graph* Graph);
+}
 
 #endif

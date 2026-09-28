@@ -61,3 +61,10 @@ void GraphNode::AddNeighbour(GraphNode* Neighbour,int Cost)
     _Neighbours.push_back(Neighbour);
     _Costs[Neighbour] = Cost;
 }
+
+
+
+void MazeGen::Wilsons(Game* Owner,Graph* Graph)
+{
+    
+}

@@ -28,6 +28,7 @@ class Game
         Game();
         virtual bool Initialize(int WindowWidth,int WindowHeight,const char* WindowTitle);
         std::vector<Actor*> GetActors() {return _Actors;};
+        void AddActor(Actor* actor) {_Actors.push_back(actor);};
         void Run();
     protected:
         virtual void Update(float DeltaTime);
