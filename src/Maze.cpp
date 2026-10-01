@@ -49,7 +49,7 @@ void Wall::Draw()
     _Mesh->Draw(_ShaderProgram);
 }
 
-Graph::Graph() {}
+
 
 GraphNode::GraphNode(glm::vec3 Position)
 {
@@ -62,6 +62,10 @@ void GraphNode::AddNeighbour(GraphNode* Neighbour,int Cost)
     _Costs[Neighbour] = Cost;
 }
 
+Graph::Graph()
+{
+    _Nodes = std::vector<GraphNode*>();
+}
 
 
 void MazeGen::Wilsons(Game* Owner,Graph* Graph)

@@ -18,27 +18,17 @@ class TestGame : Game
             _Graph = new Graph();
             _Camera = new Camera(glm::vec3(0.0f,0.0f,0.0f),-90.0f,0.0f,glm::vec3(0.0f,1.0f,0.0f),_ShaderProgram,10.0f,35.0f,45.0f,_Window);
 
-            glm::vec3 Pos = glm::vec3(0.0f,0.0f,0.0f);
-
-            for (int i = 0; i < 100; i++)
-            {
-                if (i % 10 == 0)
-                {
-                    Pos.x = 0.0f;
-                    Pos.z -= 1.0f;
-                }
-                else
-                {
-                    Pos.x += 1.0f;
-                }
-
-                _Graph->AddNode(new GraphNode(Pos));
-            }
+          _Graph->AddNode(new GraphNode(glm::vec3(0.0f,0.0f,-3.0f)));
+            
+            
 
             for (int j = 0; j < _Graph->GetSize(); j++)
             {
                 GraphNode* Temp = _Graph->GetGraphNode(j);
-                _Actors.push_back((Actor*)new Wall(this,Temp->GetPosition(),glm::vec3(0.0f,0.0f,0.0f),0.5f,0.5f,glm::vec3(0.0f,1.0f,0.0f),_ShaderProgram));
+                _Actors.push_back((Actor*)new Wall(this,glm::vec3(Temp->GetPosition().x -0.5f,Temp->GetPosition().y,Temp->GetPosition().z),glm::vec3(0.0f,90.0f,0.0f),1.0f,1.0f,glm::vec3(1.0f,0.3f,0.1f),_ShaderProgram));
+                _Actors.push_back((Actor*)new Wall(this,glm::vec3(Temp->GetPosition().x +0.5f,Temp->GetPosition().y,Temp->GetPosition().z),glm::vec3(0.0f,90.0f,0.0f),1.0f,1.0f,glm::vec3(1.0f,0.3f,0.1f),_ShaderProgram));
+                _Actors.push_back((Actor*)new Wall(this,glm::vec3(Temp->GetPosition().x,Temp->GetPosition().y,Temp->GetPosition().z -0.5f),glm::vec3(0.0f,0.0f,0.0f),1.0f,1.0f,glm::vec3(1.0f,0.3f,0.1f),_ShaderProgram));
+                _Actors.push_back((Actor*)new Wall(this,glm::vec3(Temp->GetPosition().x,Temp->GetPosition().y,Temp->GetPosition().z + 0.5f),glm::vec3(0.0f,0.0f,0.0f),1.0f,1.0f,glm::vec3(1.0f,0.3f,0.1f),_ShaderProgram));
             }
             
             return Success;
